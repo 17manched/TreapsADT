@@ -6,6 +6,7 @@ class Node:
         self._num = random()
         self._left = left
         self._right = right
+        self._height = 0
 
     #How a node is displayed as a string
     def __str__(self):
@@ -24,15 +25,17 @@ class Node:
         else:
             return True
 
+    def updateheight(self):
+        if self._left is None or self._right is None:
+            self._height = 0
+            return self._height
+        self._height = 1 + max(self._left.updateheight(), self._right.updateheight())
+        return self._height
     #Rotates tree with this node as root to the left
     def rotateleft(self):
         A = self
-        B = A._left
         C = A._right
-        D = B._left
-        E = B._right
         F = C._left
-        G = C._right
         C._left = A
         A._right = F
         return C
@@ -55,35 +58,59 @@ class Node:
         #Insert into left subtree
         if self._value > value:
             if self._left:
-                self._left.insert(value, node)
+                self._left = self._left.insert(value, node)
             else:
                 self._left = node
             #Checks to see if Treap has max-value heap property
             if self._num < self._left._num:
                 return self.rotateright()
+            else:
+                return self
             #Insert into right subtree case
-            elif self._value < value:
-                if self._right:
-                   self._right.insert(value, node)
-                else:
-                   self._right = node
+        elif self._value < value:
+            if self._right:
+                self._right = self._right.insert(value, node)
+            else:
+                self._right = node
             #Checks to see if Treap has max-value heap property
             if self._num < self._right._num:
                 return self.rotateleft()
-        return self
+            else:
+                return self
 
     #Displays an in order Traversal with this node as root
-    def display(self):
+    def display(self, offset=0):
+        offset += 2
         if self._left:
-            print('(',end='')
-            self._left.display()
-            print(')',end='')
-        print(self,end=':')
-        print(self._num, end='')
+            self._left.display(offset)
+        print(' ' * offset, end='')
+        print(self)
         if self._right:
-            print('(',end='')
-            self._right.display()
-            print(')',end='')
+            self._right.display(offset)
+
+    def delete(self, key):
+        if self._value > key:
+            if self._left:
+                return self._left.delete(key)
+            return None
+        elif self._value < key:
+            if self._right:
+                return self._right.delete(key)
+            return None
+        elif self._value == key:
+            return self.deletethisnode()
+
+    def deletethisnode(self):
+        if self._left is None:
+            self = self._right
+        elif self._right is None:
+            self = self._left
+        elif self._left._num > self._right._num:
+            self = self.rotateright()
+            self._right.deletethisnode()
+        else:
+            self = self.rotateleft()
+            self._left.deletethisnode()
 
 
 class Treap:
@@ -109,19 +136,22 @@ class Treap:
 
     #Displays an in order Traversal
     def display(self):
+        if len(self) == 0:
+            return None
+        self._root.updateheight()
         self._root.display()
 
     #Deletes a node with the key value if it is in the Treap
     def delete(self, key):
-        if self._root._value == key:
-            if self._root._left == None:
-                self._root = self._root._right
-            if self._root._right == None:
-                self._root = self._root._left
+        if self._root:
+            self._root.delete(key)
 
     #Returns length (amount of nodes) in the Treap
     def __len__(self):
         return self._length
+
 if __name__ == '__main__':
     W = Treap()
+    W.insert(2)
+    W.insert(4)
     W.display()
