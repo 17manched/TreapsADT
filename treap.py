@@ -84,33 +84,41 @@ class Node:
         if self._left:
             self._left.display(offset)
         print(' ' * offset, end='')
-        print(self)
+        print(self,end=' : ')
+        print(self._num)
         if self._right:
             self._right.display(offset)
 
     def delete(self, key):
         if self._value > key:
             if self._left:
-                return self._left.delete(key)
+                self._left = self._left.delete(key)
+                return self
             return None
         elif self._value < key:
             if self._right:
-                return self._right.delete(key)
+                self._right = self._right.delete(key)
+                return self
             return None
         elif self._value == key:
-            return self.deletethisnode()
+            self = self.deletethisnode()
+            return self
 
     def deletethisnode(self):
         if self._left is None:
             self = self._right
+            return self
         elif self._right is None:
             self = self._left
+            return self
         elif self._left._num > self._right._num:
             self = self.rotateright()
-            self._right.deletethisnode()
+            self._right = self._right.deletethisnode()
+            return self
         else:
             self = self.rotateleft()
-            self._left.deletethisnode()
+            self._left = self._left.deletethisnode()
+            return self
 
 
 class Treap:
@@ -144,7 +152,7 @@ class Treap:
     #Deletes a node with the key value if it is in the Treap
     def delete(self, key):
         if self._root:
-            self._root.delete(key)
+            self._root = self._root.delete(key)
 
     #Returns length (amount of nodes) in the Treap
     def __len__(self):
@@ -154,4 +162,8 @@ if __name__ == '__main__':
     W = Treap()
     W.insert(2)
     W.insert(4)
+    W.insert(5)
+    W.insert(16)
+    W.insert(10)
+    W.insert(1)
     W.display()
