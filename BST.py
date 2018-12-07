@@ -1,9 +1,7 @@
-from random import random
-class TreapNode:
+class BSTNode:
     # Creates a Node with a value and possibly a left and right child
     def __init__(self, value, left=None, right=None):
         self._value = value
-        self._num = random()
         self._left = left
         self._right = right
         self._height = 0
@@ -38,29 +36,12 @@ class TreapNode:
         self._height = 1 + max(self._left.updateheight(), self._right.updateheight())
         return self._height
     #Rotates tree with this node as root to the left
-    def rotateleft(self):
-        A = self
-        C = A._right
-        F = C._left
-        C._left = A
-        A._right = F
-        return C
-
-
-    #Rotates tree with this node as root to the right
-    def rotateright(self):
-        A = self
-        B = A._left
-        E = B._right
-        A._left = E
-        B._right = A
-        return B
 
     #Insert a new item into the Treap
     def insert(self, value, node = None):
         #Checks to see if the value is the node value
         if self._value == value:
-            raise AlreadyPresentError
+            raise allreadyinthere
         #Insert into left subtree
         if self._value > value:
             if self._left:
@@ -68,21 +49,14 @@ class TreapNode:
             else:
                 self._left = node
             #Checks to see if Treap has max-value heap property
-            if self._num < self._left._num:
-                return self.rotateright()
-            else:
-                return self
+            return self
             #Insert into right subtree case
         elif self._value < value:
             if self._right:
                 self._right = self._right.insert(value, node)
             else:
                 self._right = node
-            #Checks to see if Treap has max-value heap property
-            if self._num < self._right._num:
-                return self.rotateleft()
-            else:
-                return self
+            return self
 
     #Displays an in order Traversal with this node as root
     def display(self, offset=0):
@@ -100,12 +74,12 @@ class TreapNode:
             if self._left:
                 self._left = self._left.delete(key)
                 return self
-            raise KeyError
+            return None
         elif self._value < key:
             if self._right:
                 self._right = self._right.delete(key)
                 return self
-            raise KeyError
+            return None
         elif self._value == key:
             self = self.deletethisnode()
             return self
@@ -118,27 +92,26 @@ class TreapNode:
             self = self._left
             return self
         elif self._left._num > self._right._num:
-            self = self.rotateright()
             self._right = self._right.deletethisnode()
             return self
         else:
-            self = self.rotateleft()
             self._left = self._left.deletethisnode()
             return self
 
-
-
-class Treap:
+    def height(self):
+        self.updateheight()
+        return self._height
+class BST:
     #Create a new instance of a Treap, takes no parameters and keeps the root node and its length
     def __init__(self):
         self._root = None
         self._length = 0
 
     #Insert a new item into the Treap
-    def insert(self, key):
-        node = TreapNode(key)
+    def insert(self, value):
+        node = BSTNode(value)
         if self._root:
-            self._root = self._root.insert(key, node)
+            self._root = self._root.insert(value, node)
         else:
             #Case if there is no root
             self._root = node
@@ -146,7 +119,7 @@ class Treap:
         self._length += 1
 
     #Sees if a key is in the Treap with normal search in a BST
-    def __contains__(self, key):
+    def get(self, key):
         return self._root.get(key)
 
     #Displays an in order Traversal
@@ -160,23 +133,10 @@ class Treap:
     def delete(self, key):
         if self._root:
             self._root = self._root.delete(key)
-            self._length -= 1
 
     #Returns length (amount of nodes) in the Treap
     def __len__(self):
         return self._length
 
     def height(self):
-        if self._root:
-            self._root.updateheight()
-            return self._root._height
-
-if __name__ == '__main__':
-    W = Treap()
-    W.insert(2)
-    W.insert(4)
-    W.insert(5)
-    W.insert(16)
-    W.insert(10)
-    W.insert(1)
-    W.display()
+        return self._root.height()

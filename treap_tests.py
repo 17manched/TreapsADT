@@ -6,7 +6,7 @@ class TestLabFunctions(unittest.TestCase):
     def testinsert(self):
         W = Treap()
         W.insert(2)
-        self.assertTrue(W.get(2))
+        self.assertTrue(2 in W)
 
     def testinsert2(self):
         T = Treap()
@@ -14,26 +14,30 @@ class TestLabFunctions(unittest.TestCase):
         T.insert(30)
         T.insert(2)
         T.insert(20)
-        T.display()
-        self.assertTrue(T.get(2))
-        self.assertTrue(T.get(10))
-        self.assertTrue(T.get(20))
-        self.assertTrue(T.get(30))
+#        T.display()
+        self.assertTrue(2 in T)
+        self.assertTrue(10 in T)
+        self.assertTrue(20 in T)
+        self.assertTrue(30 in T)
 
-    def testget(self):
+    def testcontains(self):
         T = Treap()
         for i in range(100):
             T.insert(i)
-        self.assertTrue(T.get(30))
+        self.assertTrue(30 in T)
 
     #Delete does not work properly yet
     def testdelete(self):
         R = Treap()
-        R.insert(10)
-        R.insert(20)
-        R.insert(30)
-        R.delete(20)
-        self.assertFalse(R.get(20))
+        R.insert(1)
+        R.insert(2)
+        R.insert(3)
+        R.insert(4)
+        R.insert(5)
+#        R.display()
+        R.delete(2)
+#        R.display()
+        self.assertFalse(2 in R)
 
     def testlen(self):
         L = []
@@ -42,7 +46,11 @@ class TestLabFunctions(unittest.TestCase):
             L.append(1000*random())
         for v in L:
             M.insert(v)
-        M.display()
+#        M.display()
+        self.assertEqual(len(M),100)
+        M.insert(25)
+        self.assertEqual(len(M),101)
+        M.delete(25)
         self.assertEqual(len(M),100)
 
 if __name__ == '__main__':
