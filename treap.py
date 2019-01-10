@@ -147,8 +147,11 @@ class Treap:
 
     #Sees if a key is in the Treap with normal search in a BST
     def __contains__(self, key):
-        return self._root.get(key)
-
+        if self._root:
+            return self._root.get(key)
+        else:
+            return False
+        
     #Displays an in order Traversal
     def display(self):
         if len(self) == 0:
@@ -170,13 +173,3 @@ class Treap:
         if self._root:
             self._root.updateheight()
             return self._root._height
-
-if __name__ == '__main__':
-    W = Treap()
-    W.insert(2)
-    W.insert(4)
-    W.insert(5)
-    W.insert(16)
-    W.insert(10)
-    W.insert(1)
-    W.display()
