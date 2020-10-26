@@ -37,6 +37,7 @@ class TreapNode:
             return self._height
         self._height = 1 + max(self._left.updateheight(), self._right.updateheight())
         return self._height
+    
     #Rotates tree with this node as root to the left
     def rotateleft(self):
         A = self
@@ -45,7 +46,6 @@ class TreapNode:
         C._left = A
         A._right = F
         return C
-
 
     #Rotates tree with this node as root to the right
     def rotateright(self):
